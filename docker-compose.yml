@@ -1,0 +1,34 @@
+# 利用するdocker-comnposeのバージョン
+version: "3"
+
+# アプリケーションで動かすための各要素
+services:
+  # サービス名
+  node:
+    # 起動するコンテナの設定（ディレクトリの指定）。build配下にDockerfileを指定するが「Dockerfile」というファイル名なら省略可。
+    build: .
+    # 環境変数の設定
+    environment:
+      - NODE_ENV=development
+    # ディレクトリのマウントの設定、:前がホストのディレクトリ、:後がコンテナのディレクトリ
+    volumes:
+      - .:/app
+    # コンテナ起動した時、実行されるコマンドの設定
+    command: "npm run dev"
+    # ポート設定、:前がホスト側のポート、:あとがコンテナ側のポート
+    ports:
+      - "3000:3000"
+    # Tele-TYpewriter、コンテナ起動後に終了させないための設定
+    tty: true
+  db:
+    image: postgres:14.2
+    volumes:
+      - postgres:/var/lib/postgresql/data
+    env_file:
+      - db.env
+    ports:
+      - 5432:5432
+
+volumes:
+  postgres:
+    driver: local
