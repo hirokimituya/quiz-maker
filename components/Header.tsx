@@ -25,7 +25,7 @@ const Header = () => {
         <HideOnScroll>
           <AppBar>
             <Toolbar>
-              <Typography variant="h6" component="div" sx={{ flexGrow: 1, cursor: "pointer" }}>
+              <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
                 <Link href="/">
                   <a>
                     <Image src="/static/logo.png" alt="logo" width="198" height="46" />
