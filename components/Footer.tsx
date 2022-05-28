@@ -36,13 +36,13 @@ const Footer = () => {
     <footer>
       <ScrollTop>
         <Fab color="primary" size="large" aria-label="scroll back to top">
-          <KeyboardArrowUpIcon color="info" />
+          <KeyboardArrowUpIcon sx={{ color: "common.white" }} />
         </Fab>
       </ScrollTop>
       <Box
         sx={{
-          bgcolor: "#616161",
-          color: "white",
+          bgcolor: "grey.700",
+          color: "common.white",
           p: 1,
           position: "absolute",
           bottom: 0,
