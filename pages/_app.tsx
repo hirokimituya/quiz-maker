@@ -7,6 +7,7 @@ import CssBaseline from "@mui/material/CssBaseline"
 import { CacheProvider, EmotionCache } from "@emotion/react"
 import theme from "@src/theme"
 import createEmotionCache from "@src/createEmotionCache"
+import Layout from "@components/Layout"
 
 // ブラウザ内のユーザーのセッション全体で共有される、クライアントサイドのキャッシュ。
 const clientSideEmotionCache = createEmotionCache()
@@ -19,13 +20,16 @@ function MyApp({ Component, pageProps: { session, ...pageProps }, emotionCache =
   return (
     <CacheProvider value={emotionCache}>
       <Head>
+        <title>{process.env.appName}</title>
         <meta name="viewport" content="initial-scale=1, width=device-width" />
       </Head>
       <ThemeProvider theme={theme}>
         <SessionProvider session={session}>
           {/* CssBaselineは、エレガントで一貫性のある、シンプルなベースラインを構築するためのキックスタートです。 */}
           <CssBaseline />
-          <Component {...pageProps} />
+          <Layout>
+            <Component {...pageProps} />
+          </Layout>
         </SessionProvider>
       </ThemeProvider>
     </CacheProvider>

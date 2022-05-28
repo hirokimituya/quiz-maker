@@ -10,7 +10,9 @@ export default class MyDocument extends Document {
         <Head>
           {/* PWAの原色 */}
           <meta name="theme-color" content={theme.palette.primary.main} />
-          <link rel="shortcut icon" href="/favicon.ico" />
+          <link rel="shortcut icon" href="/static/favicon.ico" />
+          <link rel="apple-touch-icon" href="/static/apple-touch-icon.png" />
+          <link rel="icon" type="image/png" href="/static/android-chrome-192x192.png" />
           <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap" />
           {/* MUIスタイルを最初に注入し、prepend: trueの設定と一致させます */}
           {(this.props as any).emotionStyleTags}
