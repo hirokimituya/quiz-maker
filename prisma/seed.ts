@@ -36,7 +36,7 @@ async function main() {
   const quizzesNumber = 5
 
   const quizzesCreate = Array.from({ length: quizzesNumber }).map((_, index) => ({
-    genereId: genres[0].id,
+    genreId: genres[0].id,
     title: `クイズタイトル${index + 1}`,
     description: `クイズ${index + 1}の説明文です。`
   }))

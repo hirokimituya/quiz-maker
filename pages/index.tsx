@@ -1,9 +1,11 @@
 import { Grid, Stack, Typography } from "@mui/material"
-import { NextPage } from "next"
+import { GetServerSideProps, NextPage } from "next"
 import Head from "next/head"
 import prisma from "@lib/prisma"
 import { useRouter } from "next/router"
 import QuizInfo from "@components/quiz/QuizInfo"
+import GenreNav from "@components/genre/GenreNav"
+import { Prisma } from "@prisma/client"
 
 export type QuizInfoType = {
   id: number
@@ -11,7 +13,7 @@ export type QuizInfoType = {
   description: string
   filename: string | null
   createdAt: string
-  genere: {
+  genre: {
     name: string
   }
   user: {
@@ -24,25 +26,30 @@ export type QuizInfoType = {
   }
 }
 
+export type GenreType = { id: number; name: string }
+
 type TopPageProps = {
   quizzes: QuizInfoType[]
   quizNumbers: number
-  genres: { id: number; name: string }[]
+  genres: GenreType[]
 }
 
 const TopPage: NextPage<TopPageProps> = ({ quizzes, quizNumbers, genres }) => {
   const router = useRouter()
   const { genre } = router.query
 
+  const genreId = router.query.genre ? Number(router.query.genre) : 0
+  const genreName = genres.find((genre) => genre.id === genreId)?.name
+
   return (
     <>
       <Head>
         <title>Home - {process.env.appName}</title>
       </Head>
-      <Grid container spacing={2}>
+      <Grid container spacing={3}>
         <Grid item xs={12}>
           <Typography variant="h6" component="span">
-            ジャンル : &ensp;{genre ?? "すべて"}
+            ジャンル : &ensp;{genreName ?? "すべて"}
           </Typography>
           <Typography variant="h6" component="span" ml={5}>
             クイズ数 : &ensp;{quizNumbers}
@@ -54,7 +61,7 @@ const TopPage: NextPage<TopPageProps> = ({ quizzes, quizNumbers, genres }) => {
           </Stack>
         </Grid>
         <Grid item xs={12} md>
-          {/* TODO: ジャンル一覧コンポーネントが入る */}
+          <GenreNav genres={genres} genreListId={genreId} />
         </Grid>
       </Grid>
     </>
@@ -63,16 +70,27 @@ const TopPage: NextPage<TopPageProps> = ({ quizzes, quizNumbers, genres }) => {
 
 export default TopPage
 
-export async function getServerSideProps() {
+export const getServerSideProps: GetServerSideProps = async ({ query }) => {
+  const { genre } = query
+
+  const genreId = Number(genre)
+
+  let quizWhere: Prisma.QuizWhereInput | undefined = undefined
+  if (!Number.isNaN(genreId)) {
+    quizWhere = {
+      genreId
+    }
+  }
   // クイズ一覧の取得
   const quizzes = await prisma.quiz.findMany({
+    where: quizWhere,
     select: {
       id: true,
       title: true,
       description: true,
       filename: true,
       createdAt: true,
-      genere: {
+      genre: {
         select: {
           name: true
         }
@@ -96,7 +114,9 @@ export async function getServerSideProps() {
   })
 
   // クイズ数の取得
-  const quizNumbers = await prisma.quiz.count()
+  const quizNumbers = await prisma.quiz.count({
+    where: quizWhere
+  })
 
   // ジャンル一覧を取得
   const genres = await prisma.genre.findMany({

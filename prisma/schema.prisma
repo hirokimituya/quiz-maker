@@ -45,8 +45,8 @@ model Quiz {
   id          Int       @id @default(autoincrement())
   userId      String
   user        User      @relation(fields: [userId], references: [id], onDelete: SetNull)
-  genereId    Int
-  genere      Genre     @relation(fields: [genereId], references: [id], onDelete: SetNull)
+  genreId     Int
+  genre       Genre     @relation(fields: [genreId], references: [id], onDelete: SetNull)
   title       String    @db.VarChar(100)
   description String    @db.VarChar(255)
   filename    String?   @db.VarChar(255)

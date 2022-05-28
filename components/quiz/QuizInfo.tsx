@@ -19,7 +19,7 @@ const QuizInfo = ({ quizInfo }: QuizInfoProps) => {
   const quizInfoTables = [
     { th: "タイトル", td: quizInfo.title },
     { th: "説明", td: quizInfo.description },
-    { th: "ジャンル", td: quizInfo.genere.name },
+    { th: "ジャンル", td: quizInfo.genre.name },
     { th: "設問数", td: `${quizInfo._count.items}問` },
     { th: "作成日", td: quizCreatedAt }
   ]
