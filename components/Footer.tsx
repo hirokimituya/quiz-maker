@@ -41,8 +41,8 @@ const Footer = () => {
       </ScrollTop>
       <Box
         sx={{
-          bgcolor: "#616161",
-          color: "white",
+          bgcolor: "grey.700",
+          color: "common.white",
           p: 1,
           position: "absolute",
           bottom: 0,

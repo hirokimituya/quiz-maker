@@ -48,10 +48,11 @@ model Quiz {
   genereId    Int
   genere      Genre     @relation(fields: [genereId], references: [id], onDelete: SetNull)
   title       String    @db.VarChar(100)
-  description String?   @db.VarChar(255)
+  description String    @db.VarChar(255)
   filename    String?   @db.VarChar(255)
   createdAt   DateTime? @default(now())
   updatedAt   DateTime? @updatedAt
+  items       Item[]
 }
 
 model Genre {
@@ -60,4 +61,20 @@ model Genre {
   createdAt DateTime?
   updatedAt DateTime?
   quizzes   Quiz[]
+}
+
+model Item {
+  id             Int       @id @default(autoincrement())
+  quizId         Int
+  quiz           Quiz      @relation(fields: [quizId], references: [id], onDelete: Cascade)
+  questionNumber Int       @db.SmallInt
+  format         Int       @db.SmallInt
+  question       String    @db.VarChar(255)
+  answer         String    @db.VarChar(255)
+  choice1        String?   @db.VarChar(255)
+  choice2        String?   @db.VarChar(255)
+  choice3        String?   @db.VarChar(255)
+  choice4        String?   @db.VarChar(255)
+  createdAt      DateTime? @default(now())
+  updatedAt      DateTime? @updatedAt
 }
