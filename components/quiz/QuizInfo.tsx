@@ -44,7 +44,7 @@ const QuizInfo = ({ quizInfo }: QuizInfoProps) => {
 
   return (
     <ButtonBase component="div" sx={{ width: "100%" }} onClick={onClickQuizInfo}>
-      <Paper sx={{ p: 2, width: "100%" }}>
+      <Paper sx={{ p: 2, width: "100%" }} elevation={2}>
         <Grid container spacing={2}>
           <Grid item container xs={12}>
             <Grid item onClick={onClickUser}>

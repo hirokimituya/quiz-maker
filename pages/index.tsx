@@ -24,12 +24,13 @@ export type QuizInfoType = {
   }
 }
 
-type PageProps = {
+type TopPageProps = {
   quizzes: QuizInfoType[]
+  quizNumbers: number
   genres: { id: number; name: string }[]
 }
 
-const TopPage: NextPage<PageProps> = ({ quizzes, genres }) => {
+const TopPage: NextPage<TopPageProps> = ({ quizzes, quizNumbers, genres }) => {
   const router = useRouter()
   const { genre } = router.query
 
@@ -40,8 +41,11 @@ const TopPage: NextPage<PageProps> = ({ quizzes, genres }) => {
       </Head>
       <Grid container spacing={2}>
         <Grid item xs={12}>
-          <Typography variant="h6" component="div">
-            ジャンル:&ensp;{genre ?? "すべて"}
+          <Typography variant="h6" component="span">
+            ジャンル : &ensp;{genre ?? "すべて"}
+          </Typography>
+          <Typography variant="h6" component="span" ml={5}>
+            クイズ数 : &ensp;{quizNumbers}
           </Typography>
         </Grid>
         <Grid item xs={12} md={9}>
@@ -91,6 +95,9 @@ export async function getServerSideProps() {
     }
   })
 
+  // クイズ数の取得
+  const quizNumbers = await prisma.quiz.count()
+
   // ジャンル一覧を取得
   const genres = await prisma.genre.findMany({
     select: {
@@ -102,6 +109,7 @@ export async function getServerSideProps() {
   return {
     props: {
       quizzes,
+      quizNumbers,
       genres
     }
   }
