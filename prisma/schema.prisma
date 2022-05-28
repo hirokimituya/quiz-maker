@@ -23,7 +23,8 @@ model Account {
   scope             String?
   id_token          String? @db.Text
   session_state     String?
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user              User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+
   @@unique([provider, providerAccountId])
 }
 
@@ -37,4 +38,26 @@ model User {
   createdAt     DateTime? @default(now())
   updatedAt     DateTime? @updatedAt
   accounts      Account[]
+  quizzes       Quiz[]
+}
+
+model Quiz {
+  id          Int       @id @default(autoincrement())
+  userId      String
+  user        User      @relation(fields: [userId], references: [id], onDelete: SetNull)
+  genereId    Int
+  genere      Genre     @relation(fields: [genereId], references: [id], onDelete: SetNull)
+  title       String    @db.VarChar(100)
+  description String?   @db.VarChar(255)
+  filename    String?   @db.VarChar(255)
+  createdAt   DateTime? @default(now())
+  updatedAt   DateTime? @updatedAt
+}
+
+model Genre {
+  id        Int       @id @default(autoincrement())
+  name      String    @unique @db.VarChar(20)
+  createdAt DateTime?
+  updatedAt DateTime?
+  quizzes   Quiz[]
 }
