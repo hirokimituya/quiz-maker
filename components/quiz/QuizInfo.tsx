@@ -1,8 +1,49 @@
-import { Avatar, ButtonBase, Grid, Paper, Typography } from "@mui/material"
+import { ButtonBase, Grid, Paper, Typography } from "@mui/material"
 import Image from "next/image"
-import type { QuizInfoType } from "@/pages/index"
 import { useRouter } from "next/router"
 import { format } from "date-fns"
+import UserAvatar from "@components/common/UserAvatar"
+import { UserType } from "@pages/index"
+
+export type QuizInfoType = {
+  id: number
+  title: string
+  description: string
+  filename: string | null
+  createdAt: string
+  genre: {
+    name: string
+  }
+  user: UserType
+  _count: {
+    items: number
+  }
+}
+
+export const QuizInfoSelect = {
+  id: true,
+  title: true,
+  description: true,
+  filename: true,
+  createdAt: true,
+  genre: {
+    select: {
+      name: true
+    }
+  },
+  user: {
+    select: {
+      id: true,
+      name: true,
+      image: true
+    }
+  },
+  _count: {
+    select: {
+      items: true
+    }
+  }
+} as const
 
 type QuizInfoProps = {
   quizInfo: QuizInfoType
@@ -14,7 +55,6 @@ const QuizInfo = ({ quizInfo }: QuizInfoProps) => {
   const quizImagePath = quizInfo.filename
     ? process.env.quizImageBasePath + quizInfo.filename
     : (process.env.quizDefaultImage as string)
-  const userAvatorPath = user.image ? process.env.userAvatorBasePath + user.image : process.env.userDefaultAvator
   const quizCreatedAt = format(new Date(quizInfo.createdAt), process.env.dateFormat as string)
   const quizInfoTables = [
     { th: "タイトル", td: quizInfo.title },
@@ -23,16 +63,6 @@ const QuizInfo = ({ quizInfo }: QuizInfoProps) => {
     { th: "設問数", td: `${quizInfo._count.items}問` },
     { th: "作成日", td: quizCreatedAt }
   ]
-
-  /**
-   * ユーザーのアイコンと名前をクリックしたらユーザーのダッシュボードページに遷移する
-   * @param {React.MouseEvent<HTMLDivElement>} event イベントオブジェクト
-   * @returns {void}
-   */
-  const onClickUser = (event: React.MouseEvent<HTMLDivElement>): void => {
-    event.stopPropagation()
-    router.push(`/dashbord/${user.id}`)
-  }
 
   /**
    * クイズカードにクリックしたらクイズ詳細ページに遷移する
@@ -46,16 +76,7 @@ const QuizInfo = ({ quizInfo }: QuizInfoProps) => {
     <ButtonBase component="div" sx={{ width: "100%" }} onClick={onClickQuizInfo}>
       <Paper sx={{ p: 2, width: "100%" }} elevation={2}>
         <Grid container spacing={2}>
-          <Grid item container xs={12}>
-            <Grid item onClick={onClickUser}>
-              <Avatar alt={user.name} src={userAvatorPath} />
-            </Grid>
-            <Grid item onClick={onClickUser}>
-              <Typography mt={1} ml={2}>
-                {user.name}
-              </Typography>
-            </Grid>
-          </Grid>
+          <UserAvatar user={user} />
           <Grid item>
             <Image alt="quiz image" src={quizImagePath} width={216} height={216} />
           </Grid>
