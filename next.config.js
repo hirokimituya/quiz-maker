@@ -6,7 +6,6 @@ const nextConfig = {
     quizImageBasePath: "/images/upload/quiz/",
     quizDefaultImage: "/images/upload/quiz/noimage.png",
     userAvatorBasePath: "/images/upload/avator/",
-    userDefaultAvator: "/images/upload/avator/noavator.png",
     dateFormat: "yyyy/MM/dd HH:mm:ss"
   }
 }
