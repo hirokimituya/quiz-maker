@@ -39,7 +39,7 @@ const TopPage: NextPage<TopPageProps> = ({ quizzes, quizNumbers, genres }) => {
   const router = useRouter()
   const { genre } = router.query
 
-  const genreId = router.query.genre ? Number(router.query.genre) : 0
+  const genreId = genre ? Number(genre) : 0
   const genreName = genres.find((genre) => genre.id === genreId)?.name
 
   return (
@@ -78,7 +78,7 @@ export default TopPage
 export const getServerSideProps: GetServerSideProps = async ({ query }) => {
   const { genre } = query
 
-  const genreId = Number(genre)
+  const genreId = Number(genre) || undefined
 
   let quizWhere: Prisma.QuizWhereInput | undefined = undefined
   if (!Number.isNaN(genreId)) {
