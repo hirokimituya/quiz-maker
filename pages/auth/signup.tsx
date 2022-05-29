@@ -1,66 +1,35 @@
 import { GetServerSideProps, NextPage } from "next"
-import { getProviders, getSession, signIn } from "next-auth/react"
-import {
-  Grid,
-  Paper,
-  Stack,
-  TextField,
-  Typography,
-  InputAdornment,
-  IconButton,
-  Alert,
-  Divider,
-  Button,
-  Box
-} from "@mui/material"
+import { getSession, signIn } from "next-auth/react"
+import { Grid, Paper, Stack, TextField, Typography, InputAdornment, IconButton, Alert, Box } from "@mui/material"
 import { useForm, Controller } from "react-hook-form"
 import { yupResolver } from "@hookform/resolvers/yup"
 import * as yup from "yup"
-import React, { useMemo, useState } from "react"
+import React, { useState } from "react"
 import Visibility from "@mui/icons-material/Visibility"
 import VisibilityOff from "@mui/icons-material/VisibilityOff"
-import GitHubIcon from "@mui/icons-material/GitHub"
-import GoogleIcon from "@mui/icons-material/Google"
 import TextWhiteButton from "@components/common/TextWhiteButton"
 import { useRouter } from "next/router"
-
-type SigninProps = {
-  providers: any
-}
+import Axios from "@lib/axios"
 
 type FormProps = {
+  name: string
   email: string
   password: string
+  passwordConfirmation?: string
 }
 
 const yupSchema = yup.object({
+  name: yup.string().required(),
   email: yup.string().required().email(),
-  password: yup.string().required()
+  password: yup.string().required().min(8),
+  passwordConfirmation: yup.string().oneOf([yup.ref("password"), null], "パスワード欄と一致していません")
 })
 
-const Signin: NextPage<SigninProps> = ({ providers }) => {
+const SignUp: NextPage = () => {
   const router = useRouter()
   const [showPassword, setShowPassword] = useState<boolean>(false)
+  const [showPasswordConfirmation, setShowPasswordConfirmation] = useState<boolean>(false)
   const [errorMessage, setErrorMessage] = useState<string | undefined>(undefined)
-
-  const providersButton: React.ReactNode[] = useMemo(() => {
-    // "credentials"を削除
-    delete providers["credentials"]
-    return Object.values(providers).map((provider: any) => {
-      let icon = undefined
-      if (provider.id === "github") {
-        icon = <GitHubIcon />
-      } else if (provider.id === "google") {
-        icon = <GoogleIcon />
-      }
-      return (
-        <Button variant="outlined" color="secondary" fullWidth onClick={() => signIn(provider.id)} key={provider.name}>
-          {icon}&nbsp;
-          {provider.name}でログイン
-        </Button>
-      )
-    })
-  }, [providers])
 
   const {
     control,
@@ -70,8 +39,10 @@ const Signin: NextPage<SigninProps> = ({ providers }) => {
     mode: "onBlur",
     resolver: yupResolver(yupSchema),
     defaultValues: {
+      name: "",
       email: "",
-      password: ""
+      password: "",
+      passwordConfirmation: ""
     }
   })
 
@@ -82,7 +53,24 @@ const Signin: NextPage<SigninProps> = ({ providers }) => {
    */
   const onSubmitForm = async (formValues: FormProps): Promise<void> => {
     setErrorMessage(undefined)
-    const formData = { ...formValues, redirect: false }
+
+    delete formValues.passwordConfirmation
+
+    // ユーザーをDBに登録
+    const response = await Axios.post("/api/signup", formValues).catch((error) => error.response)
+
+    if (response.status === 444) {
+      setErrorMessage("メールアドレスはすでに登録されています。違うメールアドレスを使用して登録してください。")
+      return
+    }
+    if (response.status === 544) {
+      setErrorMessage("入力内容が足りません")
+      return
+    }
+
+    const formData = { email: formValues.email, password: formValues.password }
+
+    // サインイン処理
     const result: any = await signIn("credentials", formData)
 
     if (result?.status === 401) {
@@ -101,21 +89,11 @@ const Signin: NextPage<SigninProps> = ({ providers }) => {
   }
 
   /**
-   * テストユーザーでログインボタンを押下したときのイベントハンドラー
-   * @param {React.MouseEvent<HTMLButtonElement>} event イベントオブジェクト
-   * @returns {Promise<void>}
+   * パスワード（確認用）入力欄のパスワード表示アイコンを押下したときのイベントハンドラー
+   * @returns {void}
    */
-  const onClickTestUserButton = async (event: React.MouseEvent<HTMLButtonElement>): Promise<void> => {
-    event.preventDefault()
-    const formData = {
-      email: "test@test.co.jp",
-      password: "test",
-      redirect: false
-    }
-    const result: any = await signIn("credentials", formData)
-    if (result?.status === 200) {
-      router.push("/dashboard")
-    }
+  const onClickShowPasswordConfirmation = (): void => {
+    setShowPasswordConfirmation((newValue) => !newValue)
   }
 
   return (
@@ -137,9 +115,24 @@ const Signin: NextPage<SigninProps> = ({ providers }) => {
               })}
             >
               <Typography variant="h4" color="primary">
-                QuizMakerにログイン
+                新規ユーザー登録
               </Typography>
               {errorMessage && <Alert severity="error">{errorMessage}</Alert>}
+              <Controller
+                control={control}
+                name="name"
+                render={({ field }) => (
+                  <TextField
+                    {...field}
+                    label="ユーザー名"
+                    type="text"
+                    error={!!errors.name}
+                    helperText={errors.name?.message}
+                    size="small"
+                    fullWidth
+                  />
+                )}
+              />
               <Controller
                 control={control}
                 name="email"
@@ -179,21 +172,37 @@ const Signin: NextPage<SigninProps> = ({ providers }) => {
                   />
                 )}
               />
+              <Controller
+                control={control}
+                name="passwordConfirmation"
+                render={({ field }) => (
+                  <TextField
+                    {...field}
+                    label="パスワード（確認用）"
+                    type={showPasswordConfirmation ? "text" : "password"}
+                    error={!!errors.passwordConfirmation}
+                    helperText={errors.passwordConfirmation?.message}
+                    size="small"
+                    fullWidth
+                    InputProps={{
+                      endAdornment: (
+                        <InputAdornment position="end">
+                          <IconButton
+                            aria-label="toggle password visibility"
+                            onClick={onClickShowPasswordConfirmation}
+                            edge="end"
+                          >
+                            {showPasswordConfirmation ? <VisibilityOff /> : <Visibility />}
+                          </IconButton>
+                        </InputAdornment>
+                      )
+                    }}
+                  />
+                )}
+              />
               <TextWhiteButton type="submit" variant="contained" fullWidth>
-                ログイン
+                登録
               </TextWhiteButton>
-              <Divider style={{ width: "120%" }} />
-              <TextWhiteButton
-                type="submit"
-                variant="contained"
-                color="success"
-                fullWidth
-                onClick={onClickTestUserButton}
-              >
-                テストユーザーでログイン
-              </TextWhiteButton>
-              <Divider style={{ width: "120%" }} />
-              {providersButton}
             </Stack>
           </Box>
         </Paper>
@@ -202,7 +211,7 @@ const Signin: NextPage<SigninProps> = ({ providers }) => {
   )
 }
 
-export default Signin
+export default SignUp
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const session = await getSession(context)
@@ -215,11 +224,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
       }
     }
   }
-
-  const providers = await getProviders()
   return {
-    props: {
-      providers
-    }
+    props: {}
   }
 }

@@ -116,13 +116,15 @@ const Header = () => {
                       <Typography textAlign="center">ダッシュボード</Typography>
                     </MenuItem>
                     <MenuItem onClick={onClickSignOut}>
-                      <Typography textAlign="center">サインアウト</Typography>
+                      <Typography textAlign="center">ログアウト</Typography>
                     </MenuItem>
                   </Menu>
                 </>
               ) : (
                 <>
-                  <TextWhiteButton size="large">ユーザー登録</TextWhiteButton>
+                  <TextWhiteButton size="large" onClick={() => router.push("/auth/signup")}>
+                    ユーザー登録
+                  </TextWhiteButton>
                   <TextWhiteButton size="large" onClick={() => router.push("/auth/signin")}>
                     ログイン
                   </TextWhiteButton>
