@@ -8,7 +8,13 @@ type UserAvatarProps = {
 
 const UserAvatar = ({ user }: UserAvatarProps) => {
   const router = useRouter()
-  const userAvatorPath = user.image ? process.env.userAvatorBasePath + user.image : undefined
+
+  let userAvatarPath = undefined
+  if (user.image?.startsWith("http")) {
+    userAvatarPath = user.image
+  } else if (user.image) {
+    userAvatarPath = process.env.userAvatorBasePath + user.image
+  }
 
   /**
    * ユーザーのアイコンと名前をクリックしたらユーザーのダッシュボードページに遷移する
@@ -23,7 +29,7 @@ const UserAvatar = ({ user }: UserAvatarProps) => {
   return (
     <Grid item container xs={12}>
       <Grid item onClick={onClickUser}>
-        <Avatar alt={user.name} src={userAvatorPath} />
+        <Avatar alt={user.name} src={userAvatarPath} />
       </Grid>
       <Grid item onClick={onClickUser}>
         <Typography mt={1} ml={2}>
