@@ -6,6 +6,7 @@ import TextWhiteButton from "./common/TextWhiteButton"
 import { ColorModeContext } from "@pages/_app"
 import Brightness4Icon from "@mui/icons-material/Brightness4"
 import Brightness7Icon from "@mui/icons-material/Brightness7"
+import { useRouter } from "next/router"
 
 type HideOnScrollProps = {
   children: React.ReactElement
@@ -21,6 +22,8 @@ function HideOnScroll({ children }: HideOnScrollProps) {
 }
 
 const Header = () => {
+  const router = useRouter()
+
   // ダークモード用のコンテキスト値
   const theme = useTheme()
   const colorMode = React.useContext(ColorModeContext)
@@ -48,7 +51,9 @@ const Header = () => {
                 )}
               </IconButton>
               <TextWhiteButton size="large">ユーザー登録</TextWhiteButton>
-              <TextWhiteButton size="large">ログイン</TextWhiteButton>
+              <TextWhiteButton size="large" onClick={() => router.push("/auth/signin")}>
+                ログイン
+              </TextWhiteButton>
             </Toolbar>
           </AppBar>
         </HideOnScroll>

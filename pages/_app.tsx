@@ -9,6 +9,8 @@ import createEmotionCache from "@src/createEmotionCache"
 import Layout from "@components/Layout"
 import { createContext, useEffect, useMemo, useRef, useState } from "react"
 import { createTheme } from "@mui/material"
+import * as yup from "yup"
+import { localeJa } from "@src/localeJa"
 
 // ブラウザ内のユーザーのセッション全体で共有される、クライアントサイドのキャッシュ。
 const clientSideEmotionCache = createEmotionCache()
@@ -16,6 +18,9 @@ const clientSideEmotionCache = createEmotionCache()
 // ダークモード用の型とコンテキスト定義
 type ModeType = "light" | "dark"
 export const ColorModeContext = createContext({ toggleColorMode: () => {} })
+
+// Yupのエラーメッセージを日本語化
+yup.setLocale(localeJa)
 
 interface MyAppProps extends AppProps {
   emotionCache?: EmotionCache
