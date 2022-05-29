@@ -3,31 +3,18 @@ import { GetServerSideProps, NextPage } from "next"
 import Head from "next/head"
 import prisma from "@lib/prisma"
 import { useRouter } from "next/router"
-import QuizInfo from "@components/quiz/QuizInfo"
+import QuizInfo, { QuizInfoType, QuizInfoSelect } from "@components/quiz/QuizInfo"
 import GenreNav from "@components/genre/GenreNav"
 import { Prisma } from "@prisma/client"
 import QuizInfoZero from "@components/quiz/QuizInfoZero"
 
-export type QuizInfoType = {
-  id: number
-  title: string
-  description: string
-  filename: string | null
-  createdAt: string
-  genre: {
-    name: string
-  }
-  user: {
-    id: string
-    name: string
-    image: string | null
-  }
-  _count: {
-    items: number
-  }
-}
-
 export type GenreType = { id: number; name: string }
+
+export type UserType = {
+  id: number
+  name: string
+  image: string | null
+}
 
 type TopPageProps = {
   quizzes: QuizInfoType[]
@@ -45,7 +32,7 @@ const TopPage: NextPage<TopPageProps> = ({ quizzes, quizNumbers, genres }) => {
   return (
     <>
       <Head>
-        <title>Home - {process.env.appName}</title>
+        <title>ホーム - {process.env.appName}</title>
       </Head>
       <Grid container spacing={3}>
         <Grid item xs={12}>
@@ -89,30 +76,7 @@ export const getServerSideProps: GetServerSideProps = async ({ query }) => {
   // クイズ一覧の取得
   const quizzes = await prisma.quiz.findMany({
     where: quizWhere,
-    select: {
-      id: true,
-      title: true,
-      description: true,
-      filename: true,
-      createdAt: true,
-      genre: {
-        select: {
-          name: true
-        }
-      },
-      user: {
-        select: {
-          id: true,
-          name: true,
-          image: true
-        }
-      },
-      _count: {
-        select: {
-          items: true
-        }
-      }
-    },
+    select: QuizInfoSelect,
     orderBy: {
       id: "asc"
     }
