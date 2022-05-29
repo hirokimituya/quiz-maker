@@ -6,6 +6,7 @@ import { useRouter } from "next/router"
 import QuizInfo from "@components/quiz/QuizInfo"
 import GenreNav from "@components/genre/GenreNav"
 import { Prisma } from "@prisma/client"
+import QuizInfoZero from "@components/quiz/QuizInfoZero"
 
 export type QuizInfoType = {
   id: number
@@ -57,7 +58,11 @@ const TopPage: NextPage<TopPageProps> = ({ quizzes, quizNumbers, genres }) => {
         </Grid>
         <Grid item xs={12} md={9}>
           <Stack spacing={4}>
-            {quizzes && quizzes.map((quizInfo: QuizInfoType) => <QuizInfo key={quizInfo.id} quizInfo={quizInfo} />)}
+            {quizzes.length !== 0 ? (
+              quizzes.map((quizInfo: QuizInfoType) => <QuizInfo key={quizInfo.id} quizInfo={quizInfo} />)
+            ) : (
+              <QuizInfoZero />
+            )}
           </Stack>
         </Grid>
         <Grid item xs={12} md>
