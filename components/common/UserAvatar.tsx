@@ -1,6 +1,7 @@
-import { Avatar, Grid, Typography } from "@mui/material"
+import { Grid, Typography } from "@mui/material"
 import { UserType } from "@pages/index"
 import { useRouter } from "next/router"
+import AvatarImage from "./AvatarImage"
 
 type UserAvatarProps = {
   user: UserType
@@ -8,13 +9,6 @@ type UserAvatarProps = {
 
 const UserAvatar = ({ user }: UserAvatarProps) => {
   const router = useRouter()
-
-  let userAvatarPath = undefined
-  if (user.image?.startsWith("http")) {
-    userAvatarPath = user.image
-  } else if (user.image) {
-    userAvatarPath = process.env.userAvatorBasePath + user.image
-  }
 
   /**
    * ユーザーのアイコンと名前をクリックしたらユーザーのダッシュボードページに遷移する
@@ -29,7 +23,7 @@ const UserAvatar = ({ user }: UserAvatarProps) => {
   return (
     <Grid item container xs={12}>
       <Grid item onClick={onClickUser}>
-        <Avatar alt={user.name} src={userAvatarPath} />
+        <AvatarImage user={user} />
       </Grid>
       <Grid item onClick={onClickUser}>
         <Typography mt={1} ml={2}>
