@@ -24,6 +24,7 @@ import React, { useEffect, useState } from "react"
 import axios, { AxiosResponse } from "axios"
 import Axios from "@lib/axios"
 import QuizItemForm from "@components/quiz/QuizItemForm"
+import CustomDialog from "@components/common/CustomDialog"
 
 type FormProps = {
   title: string
@@ -99,6 +100,7 @@ const QuizCreate: NextPage<QuizCreateProps> = ({ genreOptions }) => {
   const [imageFile, setImageFile] = useState<File | undefined>(undefined)
   const [questionsNumber, setQuestionsNumber] = useState<number>(1)
   const [errorMessage, setErrorMessage] = useState<string | undefined>(undefined)
+  const [isOpenDialog, setIsOpenDialog] = useState<boolean>(false)
 
   const useFormMethods = useForm<FormProps>({
     mode: "onBlur",
@@ -114,9 +116,13 @@ const QuizCreate: NextPage<QuizCreateProps> = ({ genreOptions }) => {
     control,
     formState: { errors },
     handleSubmit,
+    watch,
     getValues,
     setValue
   } = useFormMethods
+
+  // フォームの値を監視するために使用されます
+  const watchFormValues = watch()
 
   useEffect(() => {
     let items = getValues("items")
@@ -132,10 +138,6 @@ const QuizCreate: NextPage<QuizCreateProps> = ({ genreOptions }) => {
    */
   const onSubmitForm = async (formValues: FormProps) => {
     setErrorMessage(undefined)
-
-    if (!confirm("作成したクイズを送信してもいいですか？")) {
-      return
-    }
 
     const formData: RequestProps = { ...formValues, userId: session?.user.id as string }
 
@@ -200,6 +202,21 @@ const QuizCreate: NextPage<QuizCreateProps> = ({ genreOptions }) => {
     setImageFile(e.target.files?.[0])
   }
 
+  /**
+   * 確認ダイアログを開く
+   * @returns {void}
+   */
+  const openDialog = (): void => {
+    setIsOpenDialog(true)
+  }
+  /**
+   * 確認ダイアログを閉じる
+   * @returns {void}
+   */
+  const closeDialog = (): void => {
+    setIsOpenDialog(false)
+  }
+
   return (
     <>
       <Grid container justifyContent="center" alignItems="center" mb={2}>
@@ -210,7 +227,7 @@ const QuizCreate: NextPage<QuizCreateProps> = ({ genreOptions }) => {
         </Grid>
       </Grid>
       <FormProvider {...useFormMethods}>
-        <Paper sx={{ py: 5 }} elevation={2} component="form" onSubmit={handleSubmit(onSubmitForm)}>
+        <Paper sx={{ py: 5 }} elevation={2} component="form" onSubmit={handleSubmit(openDialog)}>
           <Grid
             container
             direction="row"
@@ -326,6 +343,17 @@ const QuizCreate: NextPage<QuizCreateProps> = ({ genreOptions }) => {
           </Grid>
         </Paper>
       </FormProvider>
+
+      <CustomDialog
+        content="作成したクイズを送信してもいいですか？"
+        maxWidth="md"
+        open={isOpenDialog}
+        onClickCancel={closeDialog}
+        onClickOk={async () => {
+          closeDialog()
+          await onSubmitForm(watchFormValues)
+        }}
+      />
     </>
   )
 }
