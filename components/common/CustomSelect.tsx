@@ -13,6 +13,9 @@ type CustomSelectProps = {
   options: Array<string | objectOption>
   label?: string
   variant?: string
+  size?: "small" | "medium"
+  error?: any
+  helperText?: any
   onChange?: (newValue: string | objectOption | null) => void
   disabled?: boolean
 }
@@ -24,7 +27,7 @@ type Option = {
 }
 
 const CustomSelect = (props: CustomSelectProps, refs: React.Ref<HTMLDivElement>) => {
-  const { name, options, label, variant, disabled } = props
+  const { name, options, label, variant, size, disabled, error, helperText } = props
   const {
     control,
     formState: { errors }
@@ -75,9 +78,13 @@ const CustomSelect = (props: CustomSelectProps, refs: React.Ref<HTMLDivElement>)
             <TextField
               {...params}
               label={label}
+              sx={(theme) => ({
+                bgcolor: theme.palette.mode === "light" ? "common.white" : undefined
+              })}
+              size={size ?? "small"}
               variant={(variant as any) ?? "standard"}
-              error={!!errors[name]}
-              helperText={errors[name]?.message}
+              error={error ?? !!errors[name]}
+              helperText={helperText ?? errors[name]?.message}
             />
           )}
           value={convertValue(field)}
