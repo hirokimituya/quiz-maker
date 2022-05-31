@@ -5,9 +5,10 @@ import AvatarImage from "./AvatarImage"
 
 type UserAvatarProps = {
   user: UserType
+  isDetail?: boolean
 }
 
-const UserAvatar = ({ user }: UserAvatarProps) => {
+const UserAvatar = ({ user, isDetail = false }: UserAvatarProps) => {
   const router = useRouter()
 
   /**
@@ -22,11 +23,11 @@ const UserAvatar = ({ user }: UserAvatarProps) => {
 
   return (
     <Grid item container xs={12}>
-      <Grid item onClick={onClickUser}>
-        <AvatarImage user={user} />
+      <Grid item onClick={onClickUser} sx={{ cursor: "pointer" }}>
+        <AvatarImage user={user} isDetail={isDetail} />
       </Grid>
-      <Grid item onClick={onClickUser}>
-        <Typography mt={1} ml={2}>
+      <Grid item onClick={onClickUser} sx={{ cursor: "pointer" }}>
+        <Typography mt={1} ml={2} variant={isDetail ? "h6" : "subtitle1"}>
           {user.name}
         </Typography>
       </Grid>

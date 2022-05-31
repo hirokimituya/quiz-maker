@@ -1,4 +1,4 @@
-import { ButtonBase, Grid, Paper, Typography } from "@mui/material"
+import { Box, ButtonBase, Grid, Paper, Typography } from "@mui/material"
 import Image from "next/image"
 import { useRouter } from "next/router"
 import { format } from "date-fns"
@@ -47,10 +47,10 @@ export const QuizInfoSelect = {
 
 type QuizInfoProps = {
   quizInfo: QuizInfoType
+  isDetail?: boolean
 }
 
-const QuizInfo = ({ quizInfo }: QuizInfoProps) => {
-  const router = useRouter()
+const QuizInfo = ({ quizInfo, isDetail = false }: QuizInfoProps) => {
   const user = quizInfo.user
   const quizImagePath = quizInfo.filename
     ? process.env.quizImageBasePath + quizInfo.filename
@@ -64,34 +64,33 @@ const QuizInfo = ({ quizInfo }: QuizInfoProps) => {
     { th: "作成日", td: quizCreatedAt }
   ]
 
-  /**
-   * クイズカードにクリックしたらクイズ詳細ページに遷移する
-   * @returns {void}
-   */
-  const onClickQuizInfo = (): void => {
-    router.push(`/quiz/${quizInfo.id}`)
-  }
-
   return (
-    <ButtonBase component="div" sx={{ width: "100%" }} onClick={onClickQuizInfo}>
-      <Paper sx={{ p: 2, width: "100%" }} elevation={2}>
+    <WrapComponent isDetail={isDetail} quizInfo={quizInfo}>
+      <Paper
+        sx={(theme) => ({
+          p: 2,
+          width: "100%",
+          bgcolor: theme.palette.mode === "light" ? undefined : "#222"
+        })}
+        elevation={isDetail ? 0 : 2}
+      >
         <Grid container spacing={2}>
-          <UserAvatar user={user} />
+          <UserAvatar user={user} isDetail={isDetail} />
           <Grid item>
-            <Image alt="quiz image" src={quizImagePath} width={216} height={216} />
+            <Image alt="quiz image" src={quizImagePath} width={isDetail ? 275 : 216} height={isDetail ? 275 : 216} />
           </Grid>
-          <Grid item xs={12} sm ml={3}>
+          <Grid item xs={12} sm ml={6} mt={3}>
             <table>
               <tbody>
                 {quizInfoTables.map((quizInfoTable, index) => (
                   <tr key={index}>
                     <th>
-                      <Typography variant="subtitle1" textAlign="left" width={80}>
+                      <Typography variant={isDetail ? "h6" : "subtitle1"} textAlign="left" width={isDetail ? 120 : 80}>
                         {quizInfoTable.th}
                       </Typography>
                     </th>
                     <td>
-                      <Typography variant="subtitle1" pl={1}>
+                      <Typography variant={isDetail ? "h6" : "subtitle1"} pl={1}>
                         {quizInfoTable.td}
                       </Typography>
                     </td>
@@ -102,8 +101,30 @@ const QuizInfo = ({ quizInfo }: QuizInfoProps) => {
           </Grid>
         </Grid>
       </Paper>
-    </ButtonBase>
+    </WrapComponent>
   )
+}
+
+const WrapComponent = ({ isDetail, quizInfo, children }: any) => {
+  const router = useRouter()
+
+  /**
+   * クイズカードにクリックしたらクイズ詳細ページに遷移する
+   * @returns {void}
+   */
+  const onClickQuizInfo = (): void => {
+    router.push(`/quiz/${quizInfo.id}`)
+  }
+
+  if (isDetail) {
+    return <Box>{children}</Box>
+  } else {
+    return (
+      <ButtonBase component="div" sx={{ width: "100%" }} onClick={onClickQuizInfo}>
+        {children}
+      </ButtonBase>
+    )
+  }
 }
 
 export default QuizInfo
