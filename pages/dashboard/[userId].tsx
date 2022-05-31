@@ -16,7 +16,7 @@ type DashboardType = {
 
 const Dashboard: NextPage<DashboardType> = ({ userInfo, quizNumbers }) => {
   // propsが取得できなかった場合、404エラーページを出力する
-  if (!userInfo || !quizNumbers) {
+  if (!userInfo) {
     return <DefaultErrorPage statusCode={404} />
   }
 
