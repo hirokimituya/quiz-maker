@@ -7,6 +7,7 @@ import QuizInfo from "@components/quiz/QuizInfo"
 import QuizInfoZero from "@components/quiz/QuizInfoZero"
 import DashBoardNav from "@components/dashboard/DashBoardNav"
 import { UserType } from "@pages/index"
+import DefaultErrorPage from "next/error"
 
 type DashboardType = {
   userInfo: UserType & { quizzes: QuizInfoType[] }
@@ -14,6 +15,11 @@ type DashboardType = {
 }
 
 const Dashboard: NextPage<DashboardType> = ({ userInfo, quizNumbers }) => {
+  // propsが取得できなかった場合、404エラーページを出力する
+  if (!userInfo || !quizNumbers) {
+    return <DefaultErrorPage statusCode={404} />
+  }
+
   const { quizzes, ...user } = userInfo
 
   return (

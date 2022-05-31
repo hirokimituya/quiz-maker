@@ -25,6 +25,7 @@ import axios, { AxiosResponse } from "axios"
 import Axios from "@lib/axios"
 import QuizItemForm from "@components/quiz/QuizItemForm"
 import CustomDialog from "@components/common/CustomDialog"
+import Head from "next/head"
 
 type FormProps = {
   title: string
@@ -219,6 +220,9 @@ const QuizCreate: NextPage<QuizCreateProps> = ({ genreOptions }) => {
 
   return (
     <>
+      <Head>
+        <title>クイズ作成 - {process.env.appName}</title>
+      </Head>
       <Grid container justifyContent="center" alignItems="center" mb={2}>
         <Grid item xs={12} sm={9} md={6}>
           <Typography variant="h3" textAlign="center">
