@@ -15,7 +15,6 @@ type QuizCreateProps = {
 
 const QuizDetail: NextPage<QuizCreateProps> = ({ quiz }) => {
   const router = useRouter()
-  const { data: session } = useSession()
 
   /**
    * クイズ回答ボタンを押下したときのイベントハンドラー
