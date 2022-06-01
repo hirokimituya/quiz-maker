@@ -1,11 +1,11 @@
 import { GetServerSideProps, NextPage } from "next"
 import { getSession } from "next-auth/react"
 
-const dashboard: NextPage = () => {
+const Dashboard: NextPage = () => {
   return <></>
 }
 
-export default dashboard
+export default Dashboard
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const session = await getSession(context)
