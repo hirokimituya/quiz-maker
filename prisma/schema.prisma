@@ -39,6 +39,7 @@ model User {
   updatedAt     DateTime? @updatedAt
   accounts      Account[]
   quizzes       Quiz[]
+  grades        Grade[]
 }
 
 model Quiz {
@@ -53,6 +54,7 @@ model Quiz {
   createdAt   DateTime? @default(now())
   updatedAt   DateTime? @updatedAt
   items       Item[]
+  grades      Grade[]
 }
 
 model Genre {
@@ -77,4 +79,29 @@ model Item {
   choice4        String?   @db.VarChar(255)
   createdAt      DateTime? @default(now())
   updatedAt      DateTime? @updatedAt
+  answers        Answer[]
+}
+
+model Grade {
+  id           Int       @id @default(autoincrement())
+  quizId       Int
+  quiz         Quiz      @relation(fields: [quizId], references: [id], onDelete: Cascade)
+  userId       String?
+  user         User?      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  correctCount Int
+  createdAt    DateTime? @default(now())
+  updatedAt    DateTime? @updatedAt
+  answers      Answer[]
+}
+
+model Answer {
+  id        Int       @id @default(autoincrement())
+  gradeId   Int
+  grade     Grade     @relation(fields: [gradeId], references: [id], onDelete: Cascade)
+  itemId    Int
+  item      Item      @relation(fields: [itemId], references: [id], onDelete: Cascade)
+  answer    String    @db.VarChar(255)
+  pass      Boolean
+  createdAt DateTime? @default(now())
+  updatedAt DateTime? @updatedAt
 }
