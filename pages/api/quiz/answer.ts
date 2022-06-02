@@ -6,7 +6,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   const { quizId, userId, correctCount, answers } = req.body
 
   try {
-    await prisma.grade.create({
+    const grade = await prisma.grade.create({
       data: {
         quizId,
         userId,
@@ -17,7 +17,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       }
     })
 
-    res.status(200).json({})
+    res.status(200).json(grade)
   } catch (error) {
     res.status(444).json({ error })
   }

@@ -101,7 +101,7 @@ const QuizAnswer: NextPage<QuizAnswerTypes> = ({ quiz }) => {
       }
       return {
         itemId: item.id,
-        answer: item.answer,
+        answer: answers[i] ?? "",
         pass
       }
     })
@@ -114,8 +114,10 @@ const QuizAnswer: NextPage<QuizAnswerTypes> = ({ quiz }) => {
       return
     }
 
+    const createGrade = response.data
+
     // クイズ詳細ページに遷移
-    router.push(`/quiz/${quiz.id}/answer/result`)
+    router.push(`/quiz/${quiz.id}/grade/${createGrade.id}`)
   }
 
   // propsが取得できなかった場合、404エラーページを出力する

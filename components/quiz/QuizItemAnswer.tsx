@@ -1,4 +1,5 @@
 import {
+  Box,
   Checkbox,
   FormControl,
   FormControlLabel,
@@ -26,13 +27,42 @@ type QuizItemAnswerProps = {
     choice3: string
     choice4: string
   }
-  onChange: (answer: string | undefined, questionNumber: number) => void
+  onChange?: (answer: string | undefined, questionNumber: number) => void
+  answer?: {
+    itemId: number
+    answer: string
+    pass: boolean
+  }
 }
 
-const QuizItemAnswer = ({ item, onChange }: QuizItemAnswerProps) => {
-  const [answerText, setAnswerText] = useState<string>("")
-  const [answerRadio, setAnswerRadio] = useState<string>("1")
-  const [answerCheckbox, setAnswerCheckbox] = useState<boolean[]>([false, false, false, false])
+const QuizItemAnswer = ({ item, onChange = () => {}, answer }: QuizItemAnswerProps) => {
+  // クイズ回答結果で使用するかクイズ回答で使用するかの判断のためのフラグ
+  const isResult = !!answer
+
+  let answerTextInit = ""
+  let answerRadioInit = "1"
+  let answerCheckboxInit = [false, false, false, false]
+
+  if (isResult) {
+    switch (item.format) {
+      case 1:
+        answerTextInit = answer.answer
+        break
+      case 2:
+        answerRadioInit = answer.answer
+        break
+      case 3:
+        const answerNumberArray = answer.answer.split(",")
+        answerCheckboxInit = Array.from({ length: 4 }).map((_, index) =>
+          answerNumberArray.some((answerNumber) => answerNumber === String(index + 1))
+        )
+        break
+    }
+  }
+
+  const [answerText, setAnswerText] = useState<string>(answerTextInit)
+  const [answerRadio, setAnswerRadio] = useState<string>(answerRadioInit)
+  const [answerCheckbox, setAnswerCheckbox] = useState<boolean[]>(answerCheckboxInit)
 
   /**
    * 回答のラジオボタンが変更されたときのイベントハンドラー
@@ -110,6 +140,9 @@ const QuizItemAnswer = ({ item, onChange }: QuizItemAnswerProps) => {
               bgcolor: theme.palette.mode === "light" ? "common.white" : undefined
             })}
             fullWidth
+            inputProps={{
+              readOnly: isResult
+            }}
           />
         )
       case 2:
@@ -119,7 +152,7 @@ const QuizItemAnswer = ({ item, onChange }: QuizItemAnswerProps) => {
             <Grid item xs={1} />
             <Grid item xs={11}>
               <Grid container direction="row" spacing={2}>
-                <FormControl margin="normal">
+                <FormControl margin="normal" disabled={isResult}>
                   <FormLabel id="answer-radio">回答</FormLabel>
                   <RadioGroup
                     aria-labelledby="answer-radio"
@@ -133,7 +166,7 @@ const QuizItemAnswer = ({ item, onChange }: QuizItemAnswerProps) => {
                         value={i + 1}
                         control={<Radio sx={{ mr: 2 }} />}
                         // @ts-ignore
-                        label={item[`choice${i + 1}`]}
+                        label={<Typography fontSize="22px">{item[`choice${i + 1}`]}</Typography>}
                       />
                     ))}
                   </RadioGroup>
@@ -149,7 +182,7 @@ const QuizItemAnswer = ({ item, onChange }: QuizItemAnswerProps) => {
             <Grid item xs={1} />
             <Grid item xs={11}>
               <Grid container direction="row" spacing={2}>
-                <FormControl margin="normal">
+                <FormControl margin="normal" disabled={isResult}>
                   <FormLabel id="answer-radio">回答</FormLabel>
                   <FormGroup id="answer-radio">
                     {Array.from({ length: answerOptionNumber }).map((_, i) => (
@@ -164,7 +197,7 @@ const QuizItemAnswer = ({ item, onChange }: QuizItemAnswerProps) => {
                           />
                         }
                         // @ts-ignore
-                        label={item[`choice${i + 1}`]}
+                        label={<Typography fontSize="22px">{item[`choice${i + 1}`]}</Typography>}
                       />
                     ))}
                   </FormGroup>
@@ -177,9 +210,70 @@ const QuizItemAnswer = ({ item, onChange }: QuizItemAnswerProps) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [answerCheckbox, answerRadio, answerText])
 
+  const correctText = useMemo(() => {
+    if (isResult) {
+      switch (item.format) {
+        case 1:
+          return item.answer
+        case 2:
+          // @ts-ignore
+          return item[`choice${item.answer}`]
+        case 3:
+          const answerNumberArray = item.answer.split(",")
+          return answerNumberArray.reduce((sum, next) => {
+            if (sum !== "") sum += ", "
+            // @ts-ignore
+            return sum + item[`choice${next}`]
+          }, "")
+      }
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
+
+  const circleAndCross = useMemo(() => {
+    if (isResult) {
+      return answer?.pass ? (
+        <Box sx={{ position: "absolute", top: "-50px", left: "70px" }}>
+          <svg width="200" height="200" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="100" cy="100" r="50" stroke="red" fill="rgba(0, 0, 0, 0)" strokeWidth="4" />
+          </svg>
+        </Box>
+      ) : (
+        <Box sx={{ position: "absolute", top: "0px", left: "120px" }}>
+          <svg xmlns="http://www.w3.org/2000/svg" version="1.1" viewBox="-48 -49 100 100" height="100px" width="100px">
+            <rect fillOpacity="0" fill="rgb(0,0,0)" height="100" width="100" y="-49" x="-48" />
+            <svg version="1.1" y="-250" x="-250" viewBox="-250 -250 500 500" height="500px" width="500px">
+              <g transform="rotate(45,0,0)" strokeLinejoin="round" fill="#fff">
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="4"
+                  strokeOpacity="1"
+                  stroke="rgb(255,0,0)"
+                  fill="none"
+                  d="m0-66.494624v132.9891"
+                />
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="4"
+                  strokeOpacity="1"
+                  stroke="rgb(255,0,0)"
+                  fill="none"
+                  d="m-66.494624 0h132.9891"
+                />
+              </g>
+            </svg>
+          </svg>
+        </Box>
+      )
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
+
   return (
     <Stack>
-      <Typography variant="h6">問題{item.questionNumber}</Typography>
+      <Typography variant="h5">問題{item.questionNumber}</Typography>
       <Paper
         sx={(theme) => ({
           bgcolor: theme.palette.mode === "light" ? "grey.300" : "grey.800"
@@ -193,9 +287,19 @@ const QuizItemAnswer = ({ item, onChange }: QuizItemAnswerProps) => {
             </Typography>
           </Grid>
           {/* 回答 */}
-          <Grid item xs={12}>
+          <Grid item xs={12} sx={{ position: "relative" }}>
             {answerRender}
+            {/* マルバツ */}
+            {circleAndCross}
           </Grid>
+          {/* 正解 */}
+          {isResult && (
+            <Grid item xs={12}>
+              <Typography variant="h5" component="div">
+                正解： {correctText}
+              </Typography>
+            </Grid>
+          )}
         </Grid>
       </Paper>
     </Stack>
