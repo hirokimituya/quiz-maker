@@ -48,7 +48,6 @@ const title = "クイズ回答結果"
 
 const QuizAnswerResult: NextPage<QuizAnswerResultTypes> = ({ quiz, grade }) => {
   const router = useRouter()
-  const { data: session } = useSession()
 
   // propsが取得できなかった場合、404エラーページを出力する
   if (!quiz || !grade) {
@@ -95,7 +94,7 @@ const QuizAnswerResult: NextPage<QuizAnswerResultTypes> = ({ quiz, grade }) => {
           <Grid item xs={1} />
           <Grid item xs={11}>
             <Typography variant="h4" component="div" color="red">
-              {items.length} 問中{grade.correctCount} 問正解
+              {items.length} 問中 {grade.correctCount} 問正解
             </Typography>
           </Grid>
 
@@ -104,7 +103,6 @@ const QuizAnswerResult: NextPage<QuizAnswerResultTypes> = ({ quiz, grade }) => {
             const answer = grade.answers.find((answer) => answer.itemId === item.id)
             return (
               <Grid key={item.questionNumber} item xs={12}>
-                {/* TODO: コンポーネントを変更する必要あり */}
                 <QuizItemAnswer item={item} answer={answer} />
               </Grid>
             )
