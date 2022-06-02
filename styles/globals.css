@@ -17,3 +17,7 @@ a {
 * {
   box-sizing: border-box;
 }
+
+.Mui-disabled {
+  color: black !important;
+}

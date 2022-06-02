@@ -101,7 +101,7 @@ const QuizAnswer: NextPage<QuizAnswerTypes> = ({ quiz }) => {
       }
       return {
         itemId: item.id,
-        answer: item.answer,
+        answer: answers[i] ?? "",
         pass
       }
     })
