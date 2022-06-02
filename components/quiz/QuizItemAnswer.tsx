@@ -166,7 +166,7 @@ const QuizItemAnswer = ({ item, onChange = () => {}, answer }: QuizItemAnswerPro
                         value={i + 1}
                         control={<Radio sx={{ mr: 2 }} />}
                         // @ts-ignore
-                        label={<Typography fontSize="22px">{item[`choice${i + 1}`]}</Typography>}
+                        label={<Typography fontSize={18}>{item[`choice${i + 1}`]}</Typography>}
                       />
                     ))}
                   </RadioGroup>
@@ -282,7 +282,7 @@ const QuizItemAnswer = ({ item, onChange = () => {}, answer }: QuizItemAnswerPro
         <Grid container direction="row" spacing={4} py={3} px={2}>
           {/* 問題文欄 */}
           <Grid item xs={12}>
-            <Typography variant="h5" component="div">
+            <Typography variant="h6" component="div">
               {item.question}
             </Typography>
           </Grid>
