@@ -26,6 +26,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
     const file = files.file
 
+    console.error(file)
+    console.log(file)
     const extension = path.extname(file.originalFilename)
 
     let oldPath = file.filepath

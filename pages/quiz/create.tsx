@@ -153,6 +153,7 @@ const QuizCreate: NextPage<QuizCreateProps> = ({ genreOptions }) => {
         formData.filename = response.data.filename
       } else {
         setErrorMessage("画像ファイルのアップロードが失敗しました。")
+        console.error("error", response)
         return
       }
     }
@@ -185,6 +186,7 @@ const QuizCreate: NextPage<QuizCreateProps> = ({ genreOptions }) => {
 
     if (response.status !== 200) {
       setErrorMessage("DB更新に失敗しました。")
+      console.error("error", response)
       return
     }
 
