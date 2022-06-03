@@ -45,7 +45,6 @@ export default NextAuth({
       }
     })
   ],
-  secret: process.env.SECRET,
   adapter: PrismaAdapter(prisma),
   session: {
     strategy: "jwt"
