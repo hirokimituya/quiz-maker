@@ -11,7 +11,7 @@ const Layout = ({ children }: LayoutProps) => (
   <>
     <Header />
     <main>
-      <Container sx={{ mt: 3 }}>{children}</Container>
+      <Container sx={{ mt: 3, mb: 8 }}>{children}</Container>
     </main>
     <Footer />
   </>

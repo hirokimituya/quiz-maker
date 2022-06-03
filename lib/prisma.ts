@@ -21,4 +21,11 @@ if (process.env.NODE_ENV === "production") {
   prisma = global.prisma
 }
 
+prisma.$use(async (params, next) => {
+  const result = await next(params)
+
+  // 取得結果にDate型がある場合、ページコンポーネントにpropsとして渡す際エラーとなるため、Date型 → string に変換するための処理
+  return JSON.parse(JSON.stringify(result))
+})
+
 export default prisma

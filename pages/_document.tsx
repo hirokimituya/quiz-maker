@@ -1,6 +1,5 @@
 import Document, { Html, Head, Main, NextScript } from "next/document"
 import createEmotionServer from "@emotion/server/create-instance"
-import theme from "@src/theme"
 import createEmotionCache from "@src/createEmotionCache"
 
 export default class MyDocument extends Document {
@@ -8,8 +7,6 @@ export default class MyDocument extends Document {
     return (
       <Html lang="ja">
         <Head>
-          {/* PWAの原色 */}
-          <meta name="theme-color" content={theme.palette.primary.main} />
           <link rel="shortcut icon" href="/static/favicon.ico" />
           <link rel="apple-touch-icon" href="/static/apple-touch-icon.png" />
           <link rel="icon" type="image/png" href="/static/android-chrome-192x192.png" />

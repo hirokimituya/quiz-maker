@@ -2,7 +2,11 @@
 const nextConfig = {
   reactStrictMode: true,
   env: {
-    appName: "QuizMaker"
+    appName: "QuizMaker",
+    quizImageBasePath: "/images/upload/quiz/",
+    quizDefaultImage: "/images/upload/quiz/noimage.png",
+    userAvatorBasePath: "/images/upload/avator/",
+    dateFormat: "yyyy/MM/dd HH:mm:ss"
   }
 }
 
