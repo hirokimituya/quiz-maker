@@ -12,6 +12,7 @@ import QuizInfo from "@components/quiz/QuizInfo"
 import { useSession } from "next-auth/react"
 import { AxiosResponse } from "axios"
 import Axios from "@lib/axios"
+import prisma from "@lib/prisma"
 
 type QuizAnswerTypes = {
   quiz: {

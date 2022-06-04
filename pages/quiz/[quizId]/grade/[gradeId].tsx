@@ -6,7 +6,7 @@ import Head from "next/head"
 import { UserType } from "@pages/index"
 import { useRouter } from "next/router"
 import QuizInfo from "@components/quiz/QuizInfo"
-import { useSession } from "next-auth/react"
+import prisma from "@lib/prisma"
 
 type QuizAnswerResultTypes = {
   quiz: {
