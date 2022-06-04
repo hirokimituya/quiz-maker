@@ -59,7 +59,10 @@ export const getServerSideProps: GetServerSideProps = async ({ query }) => {
       name: true,
       image: true,
       quizzes: {
-        select: QuizInfoSelect
+        select: QuizInfoSelect,
+        orderBy: {
+          updatedAt: "desc"
+        }
       }
     }
   })

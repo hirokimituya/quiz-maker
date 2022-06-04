@@ -78,7 +78,7 @@ export const getServerSideProps: GetServerSideProps = async ({ query }) => {
     where: quizWhere,
     select: QuizInfoSelect,
     orderBy: {
-      id: "asc"
+      updatedAt: "desc"
     }
   })
 
