@@ -71,8 +71,6 @@ export default QuizDetail
 export const getServerSideProps: GetServerSideProps = async ({ query }) => {
   const quizId = query.quizId
 
-  console.log("test")
-
   const quiz = await prisma.quiz.findUnique({
     where: {
       id: Number(quizId)

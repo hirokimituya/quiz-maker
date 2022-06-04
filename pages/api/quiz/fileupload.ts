@@ -29,6 +29,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
     console.log(process.cwd())
     console.log("quizImageDir", quizImageDir)
+    console.log("__filename", __filename)
     console.error("files", files)
     const extension = path.extname(file.originalFilename)
 
