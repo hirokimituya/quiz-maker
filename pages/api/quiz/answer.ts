@@ -1,4 +1,5 @@
 import { NextApiRequest, NextApiResponse } from "next"
+import prisma from "@lib/prisma"
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method !== "POST") return
@@ -19,6 +20,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
     res.status(200).json(grade)
   } catch (error) {
+    console.error(error)
     res.status(444).json({ error })
   }
 }
