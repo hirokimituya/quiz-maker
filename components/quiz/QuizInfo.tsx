@@ -90,7 +90,7 @@ const QuizInfo = ({ quizInfo, isDetail = false }: QuizInfoProps) => {
                       </Typography>
                     </th>
                     <td>
-                      <Typography variant={isDetail ? "h6" : "subtitle1"} pl={1}>
+                      <Typography variant="subtitle1" pl={1}>
                         {quizInfoTable.td}
                       </Typography>
                     </td>

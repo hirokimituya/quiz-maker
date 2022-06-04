@@ -42,10 +42,7 @@ const QuizDetail: NextPage<QuizCreateProps> = ({ quiz }) => {
           sx={(theme) => ({
             px: 2,
             [theme.breakpoints.up("md")]: {
-              px: 10
-            },
-            [theme.breakpoints.up("lg")]: {
-              px: 20
+              px: 5
             }
           })}
         >
@@ -54,7 +51,7 @@ const QuizDetail: NextPage<QuizCreateProps> = ({ quiz }) => {
             <QuizInfo quizInfo={quiz} isDetail={true} />
           </Grid>
 
-          {/* 送信確認ボタン */}
+          {/* クイズ回答ボタン */}
           <Grid item xs={12}>
             <TextWhiteButton variant="contained" fullWidth size="large" onClick={onClickAnswerStart}>
               <Typography>クイズ回答</Typography>
