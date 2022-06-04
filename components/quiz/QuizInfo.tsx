@@ -77,7 +77,13 @@ const QuizInfo = ({ quizInfo, isDetail = false }: QuizInfoProps) => {
         <Grid container spacing={2}>
           <UserAvatar user={user} isDetail={isDetail} />
           <Grid item>
-            <Image alt="quiz image" src={quizImagePath} width={isDetail ? 275 : 216} height={isDetail ? 275 : 216} />
+            <Image
+              alt="クイズ画像"
+              src={quizImagePath}
+              objectFit="contain"
+              width={isDetail ? 300 : 216}
+              height={isDetail ? 300 : 216}
+            />
           </Grid>
           <Grid item xs={12} sm ml={6} mt={3}>
             <table>
