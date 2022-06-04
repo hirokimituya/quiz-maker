@@ -26,6 +26,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
     res.status(200).json(quiz)
   } catch (error) {
+    console.error(error)
     res.status(444).json({ error })
   }
 }
