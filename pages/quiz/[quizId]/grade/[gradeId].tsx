@@ -78,10 +78,7 @@ const QuizAnswerResult: NextPage<QuizAnswerResultTypes> = ({ quiz, grade }) => {
           sx={(theme) => ({
             px: 2,
             [theme.breakpoints.up("md")]: {
-              px: 10
-            },
-            [theme.breakpoints.up("lg")]: {
-              px: 20
+              px: 5
             }
           })}
         >
