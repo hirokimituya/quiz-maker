@@ -45,6 +45,10 @@ const QuizItemForm = ({ index }: QuizItemFormProps) => {
 
   useEffect(() => {
     setValue(`${yupPreName}.questionNumber`, questionNumber)
+
+    // 回答形式の初期値が記述式になるように修正
+    setValue(`${yupPreName}.format`, "1")
+    onChnageFormat()
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [index])
 
@@ -112,7 +116,7 @@ const QuizItemForm = ({ index }: QuizItemFormProps) => {
   }
   useEffect(() => {
     setValue(`${yupPreName}.answerOptionNumber`, 2)
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   const answerRender = useMemo(() => {
