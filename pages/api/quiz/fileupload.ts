@@ -32,7 +32,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     const extension = path.extname(file.originalFilename)
 
     let oldPath = file.filepath
-    let newPath = path.join(quizImageDir, file.newFilename + extension)
+    let newPath = path.join(quizImageDir as string, file.newFilename + extension)
     fs.rename(oldPath, newPath, (err) => {
       if (err) throw err
     })
