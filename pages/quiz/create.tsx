@@ -99,6 +99,7 @@ const QuizCreate: NextPage<QuizCreateProps> = ({ genreOptions }) => {
   const { data: session } = useSession()
 
   const [imageFile, setImageFile] = useState<File | undefined>(undefined)
+  const [imagePreview, setImagePreview] = useState<string | ArrayBuffer | null | undefined>(undefined)
   const [questionsNumber, setQuestionsNumber] = useState<number>(1)
   const [errorMessage, setErrorMessage] = useState<string | undefined>(undefined)
   const [isOpenDialog, setIsOpenDialog] = useState<boolean>(false)
@@ -198,11 +199,36 @@ const QuizCreate: NextPage<QuizCreateProps> = ({ genreOptions }) => {
 
   /**
    * ファイル入力欄が変更したときのイベントハンドラー
-   * @param e {e: React.ChangeEvent<HTMLInputElement>} ファイルインプットイベントオブジェクト
+   * @param {React.ChangeEvent<HTMLInputElement>} event ファイルインプットイベントオブジェクト
    * @returns {void}
    */
-  const onChangeFileInput = (e: React.ChangeEvent<HTMLInputElement>): void => {
-    setImageFile(e.target.files?.[0])
+  const onChangeFileInput = (event: React.ChangeEvent<HTMLInputElement>): void => {
+    setImageFile(event.target.files?.[0])
+    setImagePreview(undefined)
+
+    // 何も選択されなかったら処理中断
+    if (event.target.files?.length === 0) {
+      return
+    }
+
+    // ファイル画像でなかったら処理中断
+    if (!event.target.files?.[0].type.match("image.*")) {
+      return
+    }
+
+    // FileReaderクラスのインスタンスを取得
+    const reader = new FileReader()
+
+    // ファイルを読み込み終わったタイミングで実行するイベントハンドラー
+    reader.onload = (e) => {
+      // imagePreviewに読み込み結果（データURL）を代入する
+      // imagePreviewに値を入れると<output>に画像が表示される
+      setImagePreview(e.target?.result)
+    }
+
+    // ファイルを読み込む
+    // 読み込まれたファイルはデータURL形式で受け取れる（上記onload参照）
+    reader.readAsDataURL(event.target?.files[0])
   }
 
   /**
@@ -303,6 +329,14 @@ const QuizCreate: NextPage<QuizCreateProps> = ({ genreOptions }) => {
                 {imageFile?.name}
               </Typography>
             </Grid>
+            {!!imagePreview && (
+              <Grid item xs={12}>
+                <output>
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img src={imagePreview as string} alt="画像プレビュー" style={{ maxWidth: 300 }} />
+                </output>
+              </Grid>
+            )}
             {/* 問題数選択欄 */}
             <Grid item xs={4} mt={3}>
               <FormControl fullWidth>
