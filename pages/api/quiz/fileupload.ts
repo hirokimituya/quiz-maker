@@ -2,7 +2,6 @@ import formidable from "formidable"
 import fs from "fs"
 import path from "path"
 import type { NextApiRequest, NextApiResponse } from "next"
-import { quizImageDir } from "@constants/constants"
 
 // ファイルアップロードをするときはこの設定がないと自動でbodyパースされてうまくファイルが取得できない
 export const config = {
@@ -13,6 +12,8 @@ export const config = {
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method !== "POST") return
+
+  const quizImageDir = process.env.QUIZ_IMAGE_DIR
 
   const form: any = new formidable.IncomingForm()
   form.uploadDir = quizImageDir
