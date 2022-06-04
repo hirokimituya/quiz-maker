@@ -51,6 +51,7 @@ model Quiz {
   title       String    @db.VarChar(100)
   description String    @db.VarChar(255)
   filename    String?   @db.VarChar(255)
+  fileBinary  String?
   createdAt   DateTime? @default(now())
   updatedAt   DateTime? @updatedAt
   items       Item[]
@@ -87,7 +88,7 @@ model Grade {
   quizId       Int
   quiz         Quiz      @relation(fields: [quizId], references: [id], onDelete: Cascade)
   userId       String?
-  user         User?      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user         User?     @relation(fields: [userId], references: [id], onDelete: Cascade)
   correctCount Int
   createdAt    DateTime? @default(now())
   updatedAt    DateTime? @updatedAt

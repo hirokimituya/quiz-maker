@@ -49,6 +49,7 @@ type FormProps = {
 type RequestProps = {
   userId: string
   filename?: string
+  fileBinary?: string | ArrayBuffer | null
 } & FormProps
 
 type QuizCreateProps = {
@@ -143,21 +144,24 @@ const QuizCreate: NextPage<QuizCreateProps> = ({ genreOptions }) => {
 
     const formData: RequestProps = { ...formValues, userId: session?.user.id as string }
 
+    // TODO: 本番環境のVercelにファイルアップロードがうまくできなかったため、テーブルにデータURL形式で画像データを保存するように修正
     // 画像ファイルアップロード処理
-    if (imageFile) {
-      const formFileData = new FormData()
-      formFileData.append("file", imageFile)
+    // if (imageFile) {
+    //   const formFileData = new FormData()
+    //   formFileData.append("file", imageFile)
 
-      const response = await axios.post("/api/quiz/fileupload", formFileData).catch((error) => error.response)
+    //   const response = await axios.post("/api/quiz/fileupload", formFileData).catch((error) => error.response)
 
-      if (response.status === 200) {
-        formData.filename = response.data.filename
-      } else {
-        setErrorMessage("画像ファイルのアップロードが失敗しました。")
-        console.error("error", response)
-        return
-      }
-    }
+    //   if (response.status === 200) {
+    //     formData.filename = response.data.filename
+    //   } else {
+    //     setErrorMessage("画像ファイルのアップロードが失敗しました。")
+    //     console.error("error", response)
+    //     return
+    //   }
+    // }
+
+    formData.fileBinary = imagePreview
 
     // itemsをDB保存するためのデータ加工
     formData.items = formData.items.map((item: any) => {

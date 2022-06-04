@@ -4,7 +4,7 @@ import prisma from "@lib/prisma"
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method !== "POST") return
 
-  const { userId, title, description, genreId, filename, items } = req.body
+  const { userId, title, description, genreId, filename, fileBinary, items } = req.body
 
   // 必須カラムの存在チェック
   if (!userId || !title || !description || !genreId || !items) {
@@ -19,6 +19,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         description,
         genreId,
         filename,
+        fileBinary,
         items: {
           create: items
         }

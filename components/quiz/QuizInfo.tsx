@@ -10,6 +10,7 @@ export type QuizInfoType = {
   title: string
   description: string
   filename: string | null
+  fileBinary?: string
   createdAt: string
   genre: {
     name: string
@@ -25,6 +26,7 @@ export const QuizInfoSelect = {
   title: true,
   description: true,
   filename: true,
+  fileBinary: true,
   createdAt: true,
   genre: {
     select: {
@@ -52,10 +54,18 @@ type QuizInfoProps = {
 
 const QuizInfo = ({ quizInfo, isDetail = false }: QuizInfoProps) => {
   const user = quizInfo.user
-  const quizImagePath = quizInfo.filename
-    ? process.env.quizImageBasePath + quizInfo.filename
-    : (process.env.quizDefaultImage as string)
+
+  let quizImagePath
+  if (quizInfo.fileBinary) {
+    quizImagePath = quizInfo.fileBinary
+  } else {
+    quizImagePath = quizInfo.filename
+      ? process.env.quizImageBasePath + quizInfo.filename
+      : (process.env.quizDefaultImage as string)
+  }
+
   const quizCreatedAt = format(new Date(quizInfo.createdAt), process.env.dateFormat as string)
+
   const quizInfoTables = [
     { th: "タイトル", td: quizInfo.title },
     { th: "説明", td: quizInfo.description },

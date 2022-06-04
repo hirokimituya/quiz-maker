@@ -20,6 +20,7 @@ type QuizAnswerTypes = {
     title: string
     description: string
     filename: string | null
+    fileBinary?: string
     createdAt: string
     items: {
       id: number
@@ -216,6 +217,7 @@ export const getServerSideProps: GetServerSideProps = async ({ query }) => {
       title: true,
       description: true,
       filename: true,
+      fileBinary: true,
       createdAt: true,
       items: {
         select: {
