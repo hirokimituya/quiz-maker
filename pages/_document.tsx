@@ -7,6 +7,7 @@ export default class MyDocument extends Document {
     return (
       <Html lang="ja">
         <Head>
+          <meta name="description" content="クイズを作成できる・共有できるアプリになります。" />
           <link rel="shortcut icon" href="/static/favicon.ico" />
           <link rel="apple-touch-icon" href="/static/apple-touch-icon.png" />
           <link rel="icon" type="image/png" href="/static/android-chrome-192x192.png" />
