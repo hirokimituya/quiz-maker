@@ -6,7 +6,6 @@ import TextWhiteButton from "@components/common/TextWhiteButton"
 import { useRouter } from "next/router"
 import React, { useState } from "react"
 import QuizInfo, { QuizInfoSelect, QuizInfoType } from "@components/quiz/QuizInfo"
-import DefaultErrorPage from "next/error"
 import Head from "next/head"
 import CustomDialog from "@components/common/CustomDialog"
 import Axios from "@lib/axios"
@@ -61,11 +60,6 @@ const QuizDetail: NextPage<QuizCreateProps> = ({ quiz }) => {
    */
   const closeDialog = (): void => {
     setIsOpenDialog(false)
-  }
-
-  // propsが取得できなかった場合、404エラーページを出力する
-  if (!quiz) {
-    return <DefaultErrorPage statusCode={404} />
   }
 
   return (
@@ -145,6 +139,7 @@ export const getServerSideProps: GetServerSideProps = async ({ query }) => {
   return {
     props: {
       quiz
-    }
+    },
+    notFound: !quiz
   }
 }

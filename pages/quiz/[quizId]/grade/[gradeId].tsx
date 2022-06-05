@@ -1,7 +1,6 @@
 import QuizItemAnswer from "@components/quiz/QuizItemAnswer"
 import { Button, Grid, Paper, Typography } from "@mui/material"
 import { GetServerSideProps, NextPage } from "next"
-import DefaultErrorPage from "next/error"
 import Head from "next/head"
 import { UserType } from "@pages/index"
 import { useRouter } from "next/router"
@@ -49,11 +48,6 @@ const title = "クイズ回答結果"
 
 const QuizAnswerResult: NextPage<QuizAnswerResultTypes> = ({ quiz, grade }) => {
   const router = useRouter()
-
-  // propsが取得できなかった場合、404エラーページを出力する
-  if (!quiz || !grade) {
-    return <DefaultErrorPage statusCode={404} />
-  }
 
   const { items, ...quizInfo } = quiz
 
@@ -192,6 +186,7 @@ export const getServerSideProps: GetServerSideProps = async ({ query }) => {
     props: {
       quiz,
       grade
-    }
+    },
+    notFound: !quiz || !grade
   }
 }
