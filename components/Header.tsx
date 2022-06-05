@@ -82,6 +82,15 @@ const Header = () => {
     router.push("/dashboard")
   }
 
+  /**
+   * クイズ作成メニューを押下したときのイベントハンドラー
+   * @returns {void}
+   */
+  const onClickQuizCreate = (): void => {
+    handleClose()
+    router.push("/quiz/create")
+  }
+
   return (
     <header>
       <Box sx={{ flexGrow: 1 }}>
@@ -114,6 +123,9 @@ const Header = () => {
                   <Menu id="menu-appbar" anchorEl={anchorEl} open={!!anchorEl} onClose={handleClose}>
                     <MenuItem onClick={onClickDashBoard}>
                       <Typography textAlign="center">ダッシュボード</Typography>
+                    </MenuItem>
+                    <MenuItem onClick={onClickQuizCreate}>
+                      <Typography textAlign="center">クイズ作成</Typography>
                     </MenuItem>
                     <MenuItem onClick={onClickSignOut}>
                       <Typography textAlign="center">ログアウト</Typography>
