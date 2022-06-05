@@ -15,6 +15,9 @@ type QuizCreateProps = {
 
 const QuizDetail: NextPage<QuizCreateProps> = ({ quiz }) => {
   const router = useRouter()
+  const { data: session } = useSession()
+
+  const isOwner = quiz.user.id === session?.user.id
 
   /**
    * クイズ回答ボタンを押下したときのイベントハンドラー
@@ -22,6 +25,14 @@ const QuizDetail: NextPage<QuizCreateProps> = ({ quiz }) => {
    */
   const onClickAnswerStart = (): void => {
     router.push(`/quiz/${quiz.id}/answer`)
+  }
+
+  /**
+   * クイズ編集ボタンを押下したときのイベントハンドラー
+   * @returns {void}
+   */
+  const onClickQuizEdit = (): void => {
+    router.push(`/quiz/${quiz.id}/edit`)
   }
 
   // propsが取得できなかった場合、404エラーページを出力する
@@ -57,6 +68,24 @@ const QuizDetail: NextPage<QuizCreateProps> = ({ quiz }) => {
               <Typography>クイズ回答</Typography>
             </TextWhiteButton>
           </Grid>
+
+          {/* クイズ編集ボタン */}
+          {isOwner && (
+            <>
+              <Grid item xs={10} />
+              <Grid item xs={2}>
+                <TextWhiteButton
+                  color="success"
+                  variant="contained"
+                  fullWidth
+                  size="large"
+                  onClick={onClickQuizEdit}
+                >
+                  <Typography>クイズ編集</Typography>
+                </TextWhiteButton>
+              </Grid>
+            </>
+          )}
         </Grid>
       </Paper>
     </>

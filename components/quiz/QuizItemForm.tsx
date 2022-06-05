@@ -13,11 +13,13 @@ import {
   TextField,
   Typography
 } from "@mui/material"
+import { ItemType } from "@pages/quiz/[quizId]/edit"
 import React, { useEffect, useMemo, useState } from "react"
 import { Controller, useFormContext } from "react-hook-form"
 
 type QuizItemFormProps = {
   index: number
+  item?: ItemType
 }
 
 const answerFormatOptions = [
@@ -26,7 +28,7 @@ const answerFormatOptions = [
   { label: "複数選択", value: "3" }
 ]
 
-const QuizItemForm = ({ index }: QuizItemFormProps) => {
+const QuizItemForm = ({ index, item }: QuizItemFormProps) => {
   const {
     control,
     formState: { errors },
@@ -46,11 +48,45 @@ const QuizItemForm = ({ index }: QuizItemFormProps) => {
   useEffect(() => {
     setValue(`${yupPreName}.questionNumber`, questionNumber)
 
-    // 回答形式の初期値が記述式になるように修正
-    setValue(`${yupPreName}.format`, "1")
-    onChnageFormat()
+    if (item) {
+      setFormat(String(item?.format))
+
+      let answerOptionNumberInit = 2
+      if (item?.choice4) {
+        answerOptionNumberInit = 4
+      } else if (item?.choice3) {
+        answerOptionNumberInit = 3
+      }
+      setAnswerOptionNumber(answerOptionNumberInit)
+
+      if (item?.format === 2) {
+        setAnswerRadio(item?.answer)
+      }
+
+      let answerCheckboxInit
+      if (item?.format === 3) {
+        const answerArray = item?.answer.split(",")
+        answerCheckboxInit = Array.from({ length: 4 }).map((_, index) => {
+          return answerArray.includes(String(index + 1))
+        })
+        setAnswerCheckbox(answerCheckboxInit)
+      }
+      setValue(`${yupPreName}.format`, String(item?.format))
+      setValue(`${yupPreName}.question`, item.question)
+      if (item?.format === 1) {
+        setValue(`${yupPreName}.answer1`, item?.answer)
+      }
+      setValue(`${yupPreName}.choice1`, item.choice1)
+      setValue(`${yupPreName}.choice2`, item.choice2)
+      setValue(`${yupPreName}.choice3`, item.choice3)
+      setValue(`${yupPreName}.choice4`, item.choice4)
+    } else {
+      // 回答形式の初期値が記述式になるように修正
+      setValue(`${yupPreName}.format`, "1")
+      onChnageFormat()
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [index])
+  }, [])
 
   /**
    * 回答形式が変更されたときに呼ばれるイベントハンドラー
@@ -115,9 +151,9 @@ const QuizItemForm = ({ index }: QuizItemFormProps) => {
     setValue(`${yupPreName}.answerOptionNumber`, Number(event.target.value))
   }
   useEffect(() => {
-    setValue(`${yupPreName}.answerOptionNumber`, 2)
+    setValue(`${yupPreName}.answerOptionNumber`, answerOptionNumber)
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+  }, [answerOptionNumber])
 
   const answerRender = useMemo(() => {
     switch (format) {
