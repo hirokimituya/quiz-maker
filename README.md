@@ -2,7 +2,7 @@
 
 [参考画像]: https://user-images.githubusercontent.com/81066421/171986878-8dd0cc16-91ad-4a0f-aa6a-dd13c42e2ed5.gif
 [インフラ構成図]: https://user-images.githubusercontent.com/81066421/127653180-42854273-0623-4aa8-8bb0-219093a9b240.png
-[画面遷移図]: https://user-images.githubusercontent.com/81066421/171990766-3b960f98-588e-4abf-9189-cd538e859992.png
+[画面遷移図]: https://user-images.githubusercontent.com/81066421/172037950-eefb966a-d3e3-441c-8701-45548e518693.png
 [鍵]: https://user-images.githubusercontent.com/81066421/120003596-dd50c580-c010-11eb-9442-5542a6466dbb.png
 [er図]: https://user-images.githubusercontent.com/81066421/171987979-ae8652bb-ef52-46c5-85c5-ff370a57aadb.png
 [チェック]: https://user-images.githubusercontent.com/81066421/120052611-131d9a80-c061-11eb-9e86-f323d6cb2b41.png
@@ -63,6 +63,7 @@
 - クイズ機能
   - クイズ作成機能
   - クイズ回答機能
+  - クイズ編集機能
 - ダークモード切替機能
 
 <br><br>
@@ -90,6 +91,7 @@ URL の一覧は以下表の通りです。
 | /dashboard/{ユーザー ID}              | Dashboard 　     |           | ダッシュボードページを表示する |
 | /quiz/create                          | QuizCreate       | ![鍵][鍵] | クイズ作成開始ページを表示する |
 | /quiz/{クイズ ID}                     | QuizDetail       |           | クイズ詳細ページを表示する     |
+| /quiz/{クイズ ID}/edit                | QuizEdit         | ![鍵][鍵] | クイズ編集開始ページを表示する |
 | /quiz/{クイズ ID}/answer              | QuizAnswer       |           | クイズ回答開始ページを表示する |
 | /quiz/{クイズ ID}/grade/{グレード ID} | QuizAnswerResult |           | クイズ回答結果ページを表示する |
 | /auth/signup                          | SignUp           |           | 会員登録ページを表示する       |
@@ -102,6 +104,7 @@ URL の一覧は以下表の通りです。
 | URL                     |  メソッド  | 処理                                                                     |
 | ----------------------- | :--------: | ------------------------------------------------------------------------ |
 | /api/quiz/create        |    POST    | 新規クイズをテーブルに保存する                                           |
+| /api/quiz/edit          |    PUT     | クイズを更新してテーブルに保存する                                       |
 | /api/quiz/fileupload    |    POST    | 新規クイズの画像をアップロードする                                       |
 | /api/quiz/answer        |    POST    | クイズ回答結果をテーブルに保存する                                       |
 | /api/signup             |    POST    | 新規ユーザーをテーブルに保存する                                         |
