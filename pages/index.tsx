@@ -11,7 +11,7 @@ import QuizInfoZero from "@components/quiz/QuizInfoZero"
 export type GenreType = { id: number; name: string }
 
 export type UserType = {
-  id: number
+  id: string
   name: string
   image: string | null
 }
