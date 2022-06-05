@@ -36,7 +36,7 @@ const QuizItemForm = ({ index, item }: QuizItemFormProps) => {
     getValues
   } = useFormContext()
 
-  const [format, setFormat] = useState<string | undefined>(undefined)
+  const [format, setFormat] = useState<string | undefined>("1")
   const [answerOptionNumber, setAnswerOptionNumber] = useState<number>(2)
   const [answerRadio, setAnswerRadio] = useState<string | undefined>("1")
   const [answerCheckbox, setAnswerCheckbox] = useState<boolean[]>([true, false, false, false])
@@ -49,6 +49,8 @@ const QuizItemForm = ({ index, item }: QuizItemFormProps) => {
     setValue(`${yupPreName}.questionNumber`, questionNumber)
 
     if (item) {
+      setFormat(String(item?.format))
+
       let answerOptionNumberInit = 2
       if (item?.choice4) {
         answerOptionNumberInit = 4
@@ -82,7 +84,6 @@ const QuizItemForm = ({ index, item }: QuizItemFormProps) => {
       // 回答形式の初期値が記述式になるように修正
       setValue(`${yupPreName}.format`, "1")
     }
-    onChnageFormat()
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
