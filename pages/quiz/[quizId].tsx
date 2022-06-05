@@ -4,10 +4,12 @@ import { useSession } from "next-auth/react"
 import prisma from "@lib/prisma"
 import TextWhiteButton from "@components/common/TextWhiteButton"
 import { useRouter } from "next/router"
-import React from "react"
+import React, { useState } from "react"
 import QuizInfo, { QuizInfoSelect, QuizInfoType } from "@components/quiz/QuizInfo"
 import DefaultErrorPage from "next/error"
 import Head from "next/head"
+import CustomDialog from "@components/common/CustomDialog"
+import Axios from "@lib/axios"
 
 type QuizCreateProps = {
   quiz: QuizInfoType
@@ -16,6 +18,8 @@ type QuizCreateProps = {
 const QuizDetail: NextPage<QuizCreateProps> = ({ quiz }) => {
   const router = useRouter()
   const { data: session } = useSession()
+
+  const [isOpenDialog, setIsOpenDialog] = useState<boolean>(false)
 
   const isOwner = quiz.user.id === session?.user.id
 
@@ -33,6 +37,30 @@ const QuizDetail: NextPage<QuizCreateProps> = ({ quiz }) => {
    */
   const onClickQuizEdit = (): void => {
     router.push(`/quiz/${quiz.id}/edit`)
+  }
+
+  /**
+   * クイズ削除ボタンを押下したときのイベントハンドラー
+   * @returns {Promise<void>}
+   */
+  const onClickDelete = async (): Promise<void> => {
+    await Axios.delete(`/api/quiz/${quiz.id}/delete`).catch((error) => error.response)
+    router.push(`/dashboard/${session?.user.id}`)
+  }
+
+  /**
+   * 確認ダイアログを開く
+   * @returns {void}
+   */
+  const openDialog = (): void => {
+    setIsOpenDialog(true)
+  }
+  /**
+   * 確認ダイアログを閉じる
+   * @returns {void}
+   */
+  const closeDialog = (): void => {
+    setIsOpenDialog(false)
   }
 
   // propsが取得できなかった場合、404エラーページを出力する
@@ -69,25 +97,35 @@ const QuizDetail: NextPage<QuizCreateProps> = ({ quiz }) => {
             </TextWhiteButton>
           </Grid>
 
-          {/* クイズ編集ボタン */}
+          {/* クイズ編集・削除ボタン */}
           {isOwner && (
             <>
-              <Grid item xs={10} />
-              <Grid item xs={2}>
-                <TextWhiteButton
-                  color="success"
-                  variant="contained"
-                  fullWidth
-                  size="large"
-                  onClick={onClickQuizEdit}
-                >
+              <Grid item xs={6} />
+              <Grid item xs={3}>
+                <TextWhiteButton color="success" variant="contained" fullWidth size="large" onClick={onClickQuizEdit}>
                   <Typography>クイズ編集</Typography>
+                </TextWhiteButton>
+              </Grid>
+              <Grid item xs={3}>
+                <TextWhiteButton color="error" variant="contained" fullWidth size="large" onClick={openDialog}>
+                  <Typography>クイズ削除</Typography>
                 </TextWhiteButton>
               </Grid>
             </>
           )}
         </Grid>
       </Paper>
+
+      <CustomDialog
+        content="クイズを削除してもよろしいですか？"
+        maxWidth="md"
+        open={isOpenDialog}
+        onClickCancel={closeDialog}
+        onClickOk={async () => {
+          closeDialog()
+          await onClickDelete()
+        }}
+      />
     </>
   )
 }
