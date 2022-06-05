@@ -467,11 +467,17 @@ const QuizEdit: NextPage<QuizEditProps> = ({ quiz, genreOptions }) => {
 export default QuizEdit
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
-  const quizId = context.query.quizId
+  const quizId = Number(context.query.quizId)
+
+  if (isNaN(quizId)) {
+    return {
+      notFound: true
+    }
+  }
 
   const quiz = await prisma.quiz.findUnique({
     where: {
-      id: Number(quizId)
+      id: quizId
     },
     select: {
       id: true,

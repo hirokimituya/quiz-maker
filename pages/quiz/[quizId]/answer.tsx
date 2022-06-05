@@ -2,7 +2,6 @@ import TextWhiteButton from "@components/common/TextWhiteButton"
 import QuizItemAnswer from "@components/quiz/QuizItemAnswer"
 import { Alert, Button, Grid, Paper, Typography } from "@mui/material"
 import { GetServerSideProps, NextPage } from "next"
-import DefaultErrorPage from "next/error"
 import Head from "next/head"
 import { UserType } from "@pages/index"
 import { useState } from "react"
@@ -122,11 +121,6 @@ const QuizAnswer: NextPage<QuizAnswerTypes> = ({ quiz }) => {
     router.push(`/quiz/${quiz.id}/grade/${createGrade.id}`)
   }
 
-  // propsが取得できなかった場合、404エラーページを出力する
-  if (!quiz) {
-    return <DefaultErrorPage statusCode={404} />
-  }
-
   const { items, ...quizInfo } = quiz
 
   return (
@@ -206,11 +200,17 @@ const QuizAnswer: NextPage<QuizAnswerTypes> = ({ quiz }) => {
 export default QuizAnswer
 
 export const getServerSideProps: GetServerSideProps = async ({ query }) => {
-  const quizId = query.quizId
+  const quizId = Number(query.quizId)
+
+  if (isNaN(quizId)) {
+    return {
+      notFound: true
+    }
+  }
 
   const quiz = await prisma.quiz.findUnique({
     where: {
-      id: Number(quizId)
+      id: quizId
     },
     select: {
       id: true,
@@ -258,6 +258,7 @@ export const getServerSideProps: GetServerSideProps = async ({ query }) => {
   return {
     props: {
       quiz
-    }
+    },
+    notFound: !quiz
   }
 }

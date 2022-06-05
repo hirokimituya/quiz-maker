@@ -117,11 +117,18 @@ const QuizAnswerResult: NextPage<QuizAnswerResultTypes> = ({ quiz, grade }) => {
 export default QuizAnswerResult
 
 export const getServerSideProps: GetServerSideProps = async ({ query }) => {
-  const { quizId, gradeId } = query
+  const quizId = Number(query.quizId)
+  const gradeId = Number(query.gradeId)
+
+  if (isNaN(quizId) || isNaN(gradeId)) {
+    return {
+      notFound: true
+    }
+  }
 
   const quiz = await prisma.quiz.findUnique({
     where: {
-      id: Number(quizId)
+      id: quizId
     },
     select: {
       id: true,
@@ -168,7 +175,7 @@ export const getServerSideProps: GetServerSideProps = async ({ query }) => {
 
   const grade = await prisma.grade.findUnique({
     where: {
-      id: Number(gradeId)
+      id: gradeId
     },
     select: {
       correctCount: true,
