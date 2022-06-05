@@ -278,6 +278,15 @@ const QuizEdit: NextPage<QuizEditProps> = ({ quiz, genreOptions }) => {
   }
 
   /**
+   * 画像ファイル削除ボタンを押下したときのイベントハンドラー
+   * @returns {void}
+   */
+  const onClickImageDelete = (): void => {
+    setImagePreview(null)
+    setImageFile(undefined)
+  }
+
+  /**
    * 確認ダイアログを開く
    * @returns {void}
    */
@@ -377,13 +386,21 @@ const QuizEdit: NextPage<QuizEditProps> = ({ quiz, genreOptions }) => {
                 {imageFile?.name}
               </Typography>
             </Grid>
+            {/* 画像プレビュー */}
             {!!quizImagePath && (
-              <Grid item xs={12}>
-                <output>
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img src={quizImagePath} alt="画像プレビュー" style={{ maxWidth: 300 }} />
-                </output>
-              </Grid>
+              <>
+                <Grid item xs={5}>
+                  <output>
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img src={quizImagePath} alt="画像プレビュー" style={{ maxWidth: 300 }} />
+                  </output>
+                </Grid>
+                <Grid item xs={7} alignSelf="end">
+                  <Button variant="contained" color="error" onClick={onClickImageDelete}>
+                    画像ファイル削除
+                  </Button>
+                </Grid>
+              </>
             )}
             {/* 問題数選択欄 */}
             <Grid item xs={4} mt={3}>
