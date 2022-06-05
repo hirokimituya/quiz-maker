@@ -49,8 +49,6 @@ const QuizItemForm = ({ index, item }: QuizItemFormProps) => {
     setValue(`${yupPreName}.questionNumber`, questionNumber)
 
     if (item) {
-      setFormat(String(item?.format))
-
       let answerOptionNumberInit = 2
       if (item?.choice4) {
         answerOptionNumberInit = 4
@@ -83,8 +81,8 @@ const QuizItemForm = ({ index, item }: QuizItemFormProps) => {
     } else {
       // 回答形式の初期値が記述式になるように修正
       setValue(`${yupPreName}.format`, "1")
-      onChnageFormat()
     }
+    onChnageFormat()
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
